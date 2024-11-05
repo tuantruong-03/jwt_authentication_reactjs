@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Alert, Button, Card, Form } from 'react-bootstrap';
 import axiosInstance from '../api/axios-instance';
 import { Link } from 'react-router-dom';
+import useApi from '../api/axios-instance';
 
 interface RegisterFormValues {
   email: string;
@@ -20,6 +21,7 @@ const Register: React.FC = () => {
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
+  const axiosInstance = useApi()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -42,7 +44,7 @@ const Register: React.FC = () => {
     const { email, password } = formValues;
     try {
       console.log(axiosInstance)
-      const response = await axiosInstance.post("/user/register", { email, password })
+      const response = await axiosInstance.post("auth/register", { email, password })
       if (response.status == 201) {
         // Created status
         setError(null);

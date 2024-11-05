@@ -1,19 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import Cookies from 'universal-cookie';
+import { UserContext } from '../hooks/UserContext';
 
 const Home: React.FC = () => {
-    const cookies = new Cookies(null, { path: '/' });
-    const accessToken = cookies.get("accessToken");
     return (
-        accessToken ? 
         <div className="container mt-5 text-center">
-            <h1>Welcome</h1>
-            <Link to="/" className="btn btn-primary btn-lg mt-3">
-                This is your home page
+            <h1>Homepage</h1>
+            <Link to="/profile" className="btn btn-primary btn-lg mt-3">
+                Click to see your profile
             </Link>
         </div>
-        : <Navigate to="/login"/>
     );
 };
 

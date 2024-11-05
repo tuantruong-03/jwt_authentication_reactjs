@@ -1,9 +1,11 @@
 // src/components/Login.tsx
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Alert, Button, Card, Form } from 'react-bootstrap';
 import axiosInstance from '../api/axios-instance';
 import { Link, useNavigate } from 'react-router-dom';
 import Cookies from 'universal-cookie';
+import { UserContext } from '../hooks/UserContext';
+import useApi from '../api/axios-instance';
 
 interface LoginFormValues {
   email: string;
@@ -16,9 +18,11 @@ const Login: React.FC = () => {
     password: '',
   });
 
+  const axiosInstance = useApi()
   const navigate = useNavigate()
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
+  const {login} = useContext(UserContext)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -30,13 +34,12 @@ const Login: React.FC = () => {
 
     const { email, password } = formValues;
     try {
-      const response = await axiosInstance.post("/user/login", { email, password });
+      const response = await axiosInstance.post("auth/login", { email, password });
       if (response.status === 200) {
         setError(null);
         setSuccess(true);
         const { accessToken } = response.data; 
-        const cookies = new Cookies(null, {path : '/'})
-        cookies.set('accessToken', accessToken)
+        login(accessToken)
         navigate("/")
         
       }
